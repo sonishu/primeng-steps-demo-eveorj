@@ -1,0 +1,46 @@
+<div id="dynamic-form" [formGroup]="fg">
+  <div *ngFor="let ctrl of getControls(); let i = index">
+    <ng-container [ngSwitch]="ctrl.config.controlType">
+      <div>
+        <label class="font-semibold text-xs"> {{ ctrl.config.label }}</label>
+      </div>
+      <input
+        type="text"
+        *ngSwitchCase="'TextBox'"
+        class="ng-valid ng-dirty"
+        [formControl]="ctrl"
+        pInputText
+      />
+
+      <p-dropdown
+        *ngSwitchCase="'DropDown'"
+        [options]="(ctrl.config.dataConfig.dataSource | async)!"
+        [placeholder]="ctrl.config.placeHolder"
+        [formControl]="ctrl"
+        [optionValue]="ctrl.config.dataConfig.keyColumn"
+        [optionLabel]="ctrl.config.dataConfig.valueColumn"
+      ></p-dropdown>
+
+      <p-multiSelect
+        *ngSwitchCase="'MultiSelect'"
+        [options]="(ctrl.config.dataConfig.dataSource | async)!"
+        [formControl]="ctrl"
+        [optionValue]="ctrl.config.dataConfig.key"
+        [optionLabel]="ctrl.config.dataConfig.value"
+      ></p-multiSelect>
+
+      <div *ngSwitchCase="'Radio'" class="flex flex-row">
+        <div *ngFor="let item of ctrl.config.data | async" class="ml-2">
+          <p-radioButton
+            [name]="ctrl.config.name"
+            [inputId]="'key'"
+            [label]="item.value"
+            name="ctrl.config.name"
+            [value]="item.key"
+            [formControl]="ctrl"
+          ></p-radioButton>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
